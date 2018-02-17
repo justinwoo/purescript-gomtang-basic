@@ -34,18 +34,28 @@ setOption = setOption_
 
 type Option =
   ( title :: TitleOption
+  , tooltip :: TooltipOption
   , xAxis :: XAxisOption
   , yAxis :: YAxisOption
+  , visualMap :: VisualMapOption
+  , calendar :: CalendarOption
   , series :: Array SeriesOption
   )
 
 data TitleOption
+data TooltipOption
 data XAxisOption
 data YAxisOption
+data VisualMapOption
+data CalendarOption
 data SeriesOption
 
 type Title =
   ( text :: String
+  )
+
+type Tooltip =
+  ( position :: String
   )
 
 type XAxis =
@@ -56,9 +66,30 @@ type YAxis =
   ( data :: Array String
   )
 
+type VisualMap =
+  ( min :: Number
+  , max :: Number
+  , calculable :: Boolean
+  , orient :: String
+  , left :: String
+  , bottom :: String
+  )
+
+type Calendar =
+  ( cellSize :: Array String
+  , range :: Array String
+  )
+
 type BarSeries =
   ( name :: String
   , data :: Array Number
+  )
+
+type HeatMapSeries =
+  ( name :: String
+  , data :: Array (Array String)
+  , coordinateSystem :: String
+  , calendarIndex :: Int
   )
 
 -- helpers
@@ -69,6 +100,13 @@ makeTitle
   => Record fields
   -> TitleOption
 makeTitle = unsafeCoerce
+
+makeTooltip
+  :: forall fields fields'
+   . Union fields fields' Tooltip
+  => Record fields
+  -> TooltipOption
+makeTooltip = unsafeCoerce
 
 makeXAxis
   :: forall e fields fields'
@@ -84,6 +122,20 @@ makeYAxis
   -> YAxisOption
 makeYAxis = unsafeCoerce
 
+makeVisualMap
+  :: forall e fields fields'
+   . Union fields fields' VisualMap
+  => Record fields
+  -> VisualMapOption
+makeVisualMap = unsafeCoerce
+
+makeCalendar
+  :: forall e fields fields'
+   . Union fields fields' Calendar
+  => Record fields
+  -> CalendarOption
+makeCalendar = unsafeCoerce
+
 makeBarSeries
   :: forall fields fields' trash
    . Union fields fields' BarSeries
@@ -92,3 +144,12 @@ makeBarSeries
   => Record fields
   -> SeriesOption
 makeBarSeries r = unsafeCoerce $ insert (SProxy :: SProxy "type") "bar" r
+
+makeHeatMapSeries
+  :: forall fields fields' trash
+   . Union fields fields' HeatMapSeries
+  => RowLacks "type" fields
+  => RowCons "type" String fields trash
+  => Record fields
+  -> SeriesOption
+makeHeatMapSeries r = unsafeCoerce $ insert (SProxy :: SProxy "type") "heatmap" r
