@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "pulp build --include example && parcel example/index.html"
+    "start": "pulp build --include example && parcel example/index.html",
+    "test": "pulp build -- --censor-lib --strict"
   },
   "author": "Justin Woo",
   "license": "MIT",
   "dependencies": {
-    "echarts": "^4.0.2",
-    "parcel-bundler": "^1.5.1"
+    "echarts": "^4.0.2"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.5.1",
+    "purescript-psa": "^0.6.0"
   }
 }

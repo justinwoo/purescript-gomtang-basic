@@ -23,7 +23,7 @@ makeChart
 makeChart = makeChart_
 
 setOption
-  :: forall e options option option'
+  :: forall e option option'
    . Union option option' Option
   => Record option
   -> Instance
@@ -109,28 +109,28 @@ makeTooltip
 makeTooltip = unsafeCoerce
 
 makeXAxis
-  :: forall e fields fields'
+  :: forall fields fields'
    . Union fields fields' XAxis
   => Record fields
   -> XAxisOption
 makeXAxis = unsafeCoerce
 
 makeYAxis
-  :: forall e fields fields'
+  :: forall fields fields'
    . Union fields fields' YAxis
   => Record fields
   -> YAxisOption
 makeYAxis = unsafeCoerce
 
 makeVisualMap
-  :: forall e fields fields'
+  :: forall fields fields'
    . Union fields fields' VisualMap
   => Record fields
   -> VisualMapOption
 makeVisualMap = unsafeCoerce
 
 makeCalendar
-  :: forall e fields fields'
+  :: forall fields fields'
    . Union fields fields' Calendar
   => Record fields
   -> CalendarOption
