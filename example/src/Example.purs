@@ -2,36 +2,33 @@ module Example where
 
 import Prelude
 
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE, log)
-import DOM (DOM)
-import DOM.HTML (window)
-import DOM.HTML.Types (htmlDocumentToNonElementParentNode)
-import DOM.HTML.Window (document)
-import DOM.Node.NonElementParentNode (getElementById)
-import DOM.Node.Types (ElementId(..))
 import Data.Maybe (Maybe(..))
-import Data.Newtype (unwrap)
+import Effect (Effect)
+import Effect.Console (log)
 import Gomtang.Basic (makeBarSeries, makeCalendar, makeChart, makeHeatMapSeries, makeTitle, makeTooltip, makeVisualMap, makeXAxis, makeYAxis, setOption)
+import Web.DOM.NonElementParentNode (getElementById)
+import Web.HTML (window)
+import Web.HTML.HTMLDocument (toNonElementParentNode)
+import Web.HTML.Window (document)
 
 renderChart option elId = do
   ele
      <- getElementById elId
-    <<< htmlDocumentToNonElementParentNode
+    <<< toNonElementParentNode
     =<< document
     =<< window
   case ele of
     Nothing ->
-      log $ "could not find element " <> unwrap elId
+      log $ "could not find element " <> elId
     Just ele' -> do
       chart <- makeChart ele'
       setOption option chart
-      log $ "mounted " <> unwrap elId
+      log $ "mounted " <> elId
 
-main :: forall e. Eff (dom :: DOM, console :: CONSOLE | e) Unit
+main :: Effect Unit
 main = do
-  renderChart mainOption (ElementId "main")
-  renderChart heatMapOption (ElementId "heatmap")
+  renderChart mainOption "main"
+  renderChart heatMapOption "heatmap"
   where
     mainOption =
       { title: makeTitle { text: "Bar Example" }
